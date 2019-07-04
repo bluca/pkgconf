@@ -152,6 +152,16 @@ pkgconf_pkg_parser_keyword_set(void *opaque, const size_t lineno, const char *ke
 	pair->func(pkg->owner, pkg, keyword, lineno, pair->offset, value);
 }
 
+static bool
+is_path_prefix_equal(const char *path1, const char *path2, size_t path2_len)
+{
+#ifdef _WIN32
+	return !_strnicmp(path1, path2, path2_len);
+#else
+	return !strncmp(path1, path2, path2_len);
+#endif
+}
+
 static const char *
 determine_prefix(const pkgconf_pkg_t *pkg, char *buf, size_t buflen)
 {
@@ -185,6 +195,11 @@ determine_prefix(const pkgconf_pkg_t *pkg, char *buf, size_t buflen)
 		return NULL;
 
 	pathiter[0] = '\0';
+
+	/* Debian/Ubuntu use ..../lib/x86_64-linux-gnu/pkg-config */
+	pathiter = strrchr(buf, PKG_DIR_SEP_S);
+	if (pathiter != NULL && is_path_prefix_equal(pathiter, "/lib", 4))
+		pathiter[0] = '\0';
 
 	return buf;
 }
@@ -224,16 +239,6 @@ canonicalize_path(char *buf)
 #endif
 
 	remove_additional_separators(buf);
-}
-
-static bool
-is_path_prefix_equal(const char *path1, const char *path2, size_t path2_len)
-{
-#ifdef _WIN32
-	return !_strnicmp(path1, path2, path2_len);
-#else
-	return !strncmp(path1, path2, path2_len);
-#endif
 }
 
 static void

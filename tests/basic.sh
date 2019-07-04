@@ -298,6 +298,9 @@ relocatable_body()
 	atf_check \
 		-o inline:"${basedir}/lib-relocatable\n" \
 		pkgconf --define-prefix --variable=prefix ${basedir}/lib-relocatable/lib/pkgconfig/foo.pc
+	atf_check \
+		-o inline:"${basedir}/lib-relocatable\n" \
+		pkgconf --define-prefix --variable=prefix ${basedir}/lib-relocatable/lib/arch/pkgconfig/foo.pc
 }
 
 single_depth_selectors_body()
