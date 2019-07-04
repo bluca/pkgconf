@@ -170,7 +170,7 @@ CLEANFILES =	$(EXTRA_PROGRAMS) \
 		$(check_SCRIPTS)
 
 check: pkgconf $(check_SCRIPTS)
-	kyua --config=none test --kyuafile='$(top_builddir)/Kyuafile' \
+	kyua --verbose --config=none test --kyuafile='$(top_builddir)/Kyuafile' \
 		--build-root='$(top_builddir)'
 
 .sh:
